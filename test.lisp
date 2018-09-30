@@ -79,21 +79,70 @@
     (format t "~%5.Content-length ~A" hdr))
   ;; 
   )
-(defparameter *iov* (cffi::foreign-alloc '(:struct nng-cffi::iov)))
+
+
+(defmacro with-iov ((iov len &key buf (extra 0)) &body body)
+  `(let ((len ,len))
+     (with-foreign-object (,iov '(:struct iov))
+       (with-foreign-slots ((iov-buf
+			     iov-len) ,iov (:struct iov))
+	 (setf iov-buf (or ,buf (foreign-alloc :char :count (+ ,extra len) ))
+	       iov-len len)
+	 ,@body))))
+
+(defmacro iov-buf (iov)
+  `(with-foreign-slots ((iov-buf) ,iov (:struct iov))
+     iov-buf))
+
+(defmacro iov-len (iov)
+  `(with-foreign-slots ((iov-len) ,iov (:struct iov))
+     iov-len))
+
+(defun iov-make(bytes &optional buf)
+  (let ((iov (foreign-alloc '(:struct iov))))
+    (with-foreign-slots ((iov-buf  iov-len) iov
+			 (:struct iov))
+      (setf iov-buf (or buf (foreign-alloc :char :count bytes))
+	    iov-len bytes))
+    iov))
+
+
+(defparameter *iov* ;;(cffi::foreign-alloc '(:struct iov))
+  (iov-make 33))
 
 (defun t3 (len)
-  (with-foreign-slots ((nng-cffi::iov-buf
-			nng-cffi::iov-len) *iov* (:struct nng-cffi::iov))
-    (setf nng-cffi::iov-buf (foreign-alloc :char :count (1+ len) )
-	  nng-cffi::iov-len len)
+  (with-foreign-slots ((iov-buf
+			iov-len) *iov* (:struct iov))
+    (setf iov-buf (foreign-alloc :char :count (1+ len) )
+	  iov-len len)
     (aio-set-iov *aio* 1 *iov*)
     (http-conn-read-all *conn* *aio*)
     (aio-wait *aio*)
     (format t "~%10.read  ~A" (aio-result *aio*))
-    (%dump nng-cffi::iov-buf)    ))
+    (%dump iov-buf)    ))
 
+(defun t3 ()
+  (aio-set-iov *aio* 1 *iov*)
+  (http-conn-read-all *conn* *aio*)
+  (aio-wait *aio*)
+  (format t "~%10.read  ~A" (aio-result *aio*))
+  (%dump (iov-buf *iov*))    )
+
+
+(defun t3 ()
+  (with-iov (iov 32 :extra 1)
+    (setf iov-len 32)
+    (aio-set-iov *aio* 1 iov)
+    (http-conn-read-all *conn* *aio*)
+    (aio-wait *aio*)
+    (format t "~%10.read  ~A" (aio-result *aio*))
+    (%dump (iov-buf iov)))    )
 
 (defun test ()
   (t1)
   (t2)
   (t3 32))
+
+
+(defun qqq ()
+  (with-iov (x 32)))
