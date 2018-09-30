@@ -18,6 +18,6 @@
 	       (:file "nng-http")
 	       (:file "nng-main")
 
-	       (:file "test")
+	       (:file "demo/http-client/http-client")
 
 	       ))

@@ -1,10 +1,32 @@
 ;;;; package.lisp
 (in-package #:nng)
 
+
+(defmacro with-iov ((iov len &key buf (extra 0)) &body body)
+  `(let ((len ,len))
+     (with-foreign-object (,iov '(:struct iov))
+       (with-foreign-slots ((iov-buf
+			     iov-len) ,iov (:struct iov))
+	 (setf iov-buf (or ,buf (foreign-alloc :char :count (+ ,extra len) ))
+	       iov-len len)
+	 ,@body))))
+
+
+(defun iov-make(bytes &optional buf)
+  (let ((iov (foreign-alloc '(:struct iov))))
+    (with-foreign-slots ((iov-buf  iov-len) iov
+			 (:struct iov))
+      (setf iov-buf (or buf (foreign-alloc :char :count bytes))
+	    iov-len bytes))
+    iov))
+
+
 ;; URL
 (def (url-parse :kind alloc) url-string)
 
 (def (aio-abort) aio err)
+;; Make this manually, because we want some useful defaults.
+
 (PROGN
  (DEFUN AIO-ALLOC (&OPTIONAL (CALLBACK (NULL-POINTER)) (ARG (null-pointer)))
    (WITH-FOREIGN-OBJECT (PTR :POINTER)
