@@ -22,7 +22,7 @@
 
 
 ;; URL
-(def (url-parse :kind alloc) url-string)
+
 
 (def (aio-abort) aio err)
 ;; Make this manually, because we want some useful defaults.
@@ -70,7 +70,7 @@
 
 (defun ctx-open (socket)
   (with-foreign-object (ctxp :pointer)
-    (check (nng-cffi::ctx-open ctxp socket))
+    (check (%ctx-open ctxp socket))
     (mem-ref ctxp :int)))
 
 (def (ctx-recv) ctx aio)
@@ -140,4 +140,38 @@
 (def (msg-set-pipe) msg pipe)
 (def (msg-trim :kind check) msg  size)
 (def (msg-trim-u32 :kind check) msg u32)
+
+(def (pipe-close) pipe)
+(def (pipe-dialer) pipe)
+;; TODO: pipe opts
+(def (pipe-id) pipe)
+(def (pipe-listener) pipe)
+(def (pipe-notify :kind check) socket ev cb arg)
+(def (pipe-socket) pipe)
+;; TODO: pub0 pull0 push0
+(def (recv :kind check) socket data sizep flags)
+(def (recv-aio) socket aio)
+(def (recvmsg :kind check) socket pmsg flags
+     )
+;; TODO: rep0 req0 respondent0
+(def (send :kind check) socket data size flags)
+(def (send-aio) socket aio)
+
+(def (sendmsg :kind check) socket msg flags )
+;; TODO: setopt
+(def (sleep-aio) msec aio)
+(def (socket-id) socket)
+(def (strdup) src)
+(def (strerror) error)
+(def (strfree) str)
+;; TODO: sub0 surveyor
+;;(def (tcp-register :kind check))
+;;(def (tls-register :kind check))
+(def (url-clone :kind check) dup orig)
+(def (url-free) url)
+(def (url-parse :kind alloc) url-string)
+(def (version))
+;;(def (ws-register :kind check))
+;;(def (wss-register :kind check))
+;;(def (zt-register :kind check))
 
