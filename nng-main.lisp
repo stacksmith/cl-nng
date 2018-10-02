@@ -240,3 +240,21 @@
 (def (respond0-open-raw :kind check) socket)
 
 
+
+
+(defparameter *crap* 0)
+(defparameter *out* *standard-output*)
+(defcallback mycall :void ((arg :pointer))
+  (setf *crap* 99)
+  (format *out* "~%INSIDE THREAD~%")
+  (terpri)
+  (cl:force-output *out*))
+
+
+(progn
+  (defun thread-create (func arg)
+    (with-foreign-object (ptr :pointer)
+      (check (%thread-create ptr func arg))
+      (mem-ref ptr :pointer)))
+  (export 'thead-create))
+
