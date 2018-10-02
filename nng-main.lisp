@@ -184,3 +184,59 @@
 ;;(def (wss-register :kind check))
 ;;(def (zt-register :kind check))
 
+
+
+;; Supplemental
+(def (clock))
+
+(def (cv-alloc :kind alloc) mtx)
+(def (cv-free)  cv)
+(def (cv-until :kind check) cv when)
+(def (cv-wait) cv)
+(def (cv-wake) cv)
+(def (cv-wake1) cv)
+(def (msleep) msec)
+
+(def (mtx-alloc :kind alloc) )
+(def (mtx-free) mtx)
+(def (mtx-lock) mtx)
+(def (mtx-unlock) mtx)
+
+;;(def (opts-parse))
+;;(def (random))
+
+;; protocol
+(def (pair0-open     :kind check) socket)
+(def (pair0-open-raw :kind check) socket)
+
+(def (bus0-open     :kind check) socket)
+(def (bus0-open-raw :kind check) socket)
+
+(def (pair1-open     :kind check) socket)
+(def (pair1-open-raw :kind check) socket)
+
+(def (pull0-open     :kind check) socket)
+(def (pull0-open-raw :kind check) socket)
+
+(def (push0-open     :kind check) socket)
+(def (push0-open-raw :kind check) socket)
+
+(def (pub0-open     :kind check) socket)
+(def (pub0-open-raw :kind check) socket)
+
+(def (sub0-open     :kind check) socket)
+(def (sub0-open-raw :kind check) socket)
+
+(def (req0-open     :kind check) socket)
+(def (req0-open-raw :kind check) socket)
+
+(def (rep0-open     :kind check) socket)
+(def (rep0-open-raw :kind check) socket)
+
+(def (survey0-open     :kind check) socket)
+(def (survey0-open-raw :kind check) socket)
+
+(def (respond0-open     :kind check) socket)
+(def (respond0-open-raw :kind check) socket)
+
+

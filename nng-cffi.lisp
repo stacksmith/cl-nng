@@ -1477,7 +1477,7 @@
   (arg1 :string)
   (arg2 :string))
 
-(cffi:defcfun ("nng_clock" %clock) :pointer)
+(cffi:defcfun ("nng_clock" %clock) :uint64)
 
 (cffi:defcfun ("nng_msleep" %msleep) :void
   (arg0 :pointer))
@@ -1538,4 +1538,39 @@
   (optarg :pointer)
   (optidx :pointer))
 
+(cffi:defcfun ("nng_pair0_open" %pair0-open) :int (socket :pointer))
+(cffi:defcfun ("nng_pair0_open_raw" %pair0-open-raw) :int (socket :pointer))
+(cffi:defcfun ("nng_bus0_open"     %bus0-open) :int (socket :pointer))
+(cffi:defcfun ("nng_bus0_open_raw" %bus0-open-raw) :int (socket :pointer))
+(cffi:defcfun ("nng_pair1_open"     %pair1-open) :int (socket :pointer))
+(cffi:defcfun ("nng_pair1_open_raw" %pair1-open-raw) :int (socket :pointer))
+(cffi:defcfun ("nng_pull0_open"     %pull0-open) :int (socket :pointer))
+(cffi:defcfun ("nng_pull0_open_raw" %pull0-open-raw) :int (socket :pointer))
+(cffi:defcfun ("nng_push0_open"     %push0-open) :int (socket :pointer))
+(cffi:defcfun ("nng_push0_open_raw" %push0-open-raw) :int (socket :pointer))
+(cffi:defcfun ("nng_pub0_open"     %pub0-open) :int (socket :pointer))
+(cffi:defcfun ("nng_pub0_open_raw" %pub0-open-raw) :int (socket :pointer))
+(cffi:defcfun ("nng_sub0_open"     %sub0-open) :int (socket :pointer))
+(cffi:defcfun ("nng_sub0_open_raw" %sub0-open-raw) :int (socket :pointer))
+(cffi:defcfun ("nng_req0_open"     %req0-open) :int (socket :pointer))
+(cffi:defcfun ("nng_req0_open_raw" %req0-open-raw) :int (socket :pointer))
+(cffi:defcfun ("nng_rep0_open"     %rep0-open) :int (socket :pointer))
+(cffi:defcfun ("nng_rep0_open_raw" %rep0-open-raw) :int (socket :pointer))
+(cffi:defcfun ("nng_survey0_open"     %survey0-open) :int (socket :pointer))
+(cffi:defcfun ("nng_survey0_open_raw" %survey0-open-raw) :int (socket :pointer))
+(cffi:defcfun ("nng_respond0_open"     %respond0-open) :int (socket :pointer))
+(cffi:defcfun ("nng_respond0_open_raw" %respond0-open-raw) :int (socket :pointer))
+
+
+(cffi:defcfun ("nni_base64_encode" %base64-encode) :int
+  (in :pointer)
+  (in-len size-t)
+  (out :pointer)
+  (out-len size-t))
+
+(cffi:defcfun ("nni_base64_decode" %base64-decode) :int
+  (in :pointer)
+  (in-len size-t)
+  (out :pointer)
+  (out-len size-t))
 
