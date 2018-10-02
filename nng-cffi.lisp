@@ -6,7 +6,6 @@
 
 (in-package #:nng)
 
-(defctype size-t :uint64) ;; TODO:: make portable~!
 
 ;;;SWIG wrapper code starts here
 
@@ -19,6 +18,11 @@
                         collect `(alexandria:define-constant ,value ,index))))
 
 (cl:eval-when (:compile-toplevel :load-toplevel)
+  (if (= 4 (foreign-type-size :pointer))
+      (defctype size-t :uint32)
+      (defctype size-t :uint64))
+	 
+  
   (cl:unless (cl:fboundp 'swig-lispify)
     (cl:defun swig-lispify (name flag cl:&optional (package cl:*package*))
       (cl:labels ((helper (lst last rest cl:&aux (c (cl:car lst)))

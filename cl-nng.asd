@@ -6,7 +6,7 @@
   :license  "Specify license here"
   :version "0.0.1"
   :serial t
-  :depends-on (:alexandria :cffi :cffi-libffi)
+  :depends-on (:alexandria :cffi )
   :components ((:file "package")
 	     
 	       ;;	       (:file "c-api")

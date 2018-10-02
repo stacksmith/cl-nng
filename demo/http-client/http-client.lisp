@@ -42,6 +42,12 @@
 		  :collect "     ")
 	       chars))))
 
+
+(defun d1 (pointer)
+  (format t "~8,'0X" pointer)
+  (loop for i from 0 below 16 do
+       (format t "~2,'0X" (cffi::mem-ref pointer :uint8  i))))
+
 	       
 (defparameter *url* (url-parse "http://httpbin.org/ip" ))
 
@@ -81,35 +87,9 @@
   )
 
 
-(defmacro with-iov ((iov len &key buf (extra 0)) &body body)
-  `(let ((len ,len))
-     (with-foreign-object (,iov '(:struct iov))
-       (with-foreign-slots ((iov-buf
-			     iov-len) ,iov (:struct iov))
-	 (setf iov-buf (or ,buf (foreign-alloc :char :count (+ ,extra len) ))
-	       iov-len len)
-	 ,@body))))
-
-(defmacro iov-buf (iov)
-  `(with-foreign-slots ((iov-buf) ,iov (:struct iov))
-     iov-buf))
-
-(defmacro iov-len (iov)
-  `(with-foreign-slots ((iov-len) ,iov (:struct iov))
-     iov-len))
-
-(defun iov-make(bytes &optional buf)
-  (let ((iov (foreign-alloc '(:struct iov))))
-    (with-foreign-slots ((iov-buf  iov-len) iov
-			 (:struct iov))
-      (setf iov-buf (or buf (foreign-alloc :char :count bytes))
-	    iov-len bytes))
-    iov))
-
-
 (defparameter *iov* ;;(cffi::foreign-alloc '(:struct iov))
-  (iov-make 33))
-
+  (iov-make 32 :extra 1))
+#||
 (defun t3 (len)
   (with-foreign-slots ((iov-buf
 			iov-len) *iov* (:struct iov))
@@ -120,13 +100,15 @@
     (aio-wait *aio*)
     (format t "~%10.read  ~A" (aio-result *aio*))
     (%dump iov-buf)    ))
+||#
 
-(defun t3 ()
+(defun t3a ()
   (aio-set-iov *aio* 1 *iov*)
   (http-conn-read-all *conn* *aio*)
   (aio-wait *aio*)
   (format t "~%10.read  ~A" (aio-result *aio*))
-  (%dump (iov-buf *iov*))    )
+  (%dump (iov-buf *iov*))
+  (iov-buf *iov*))
 
 
 (defun t3 ()
@@ -136,12 +118,15 @@
     (http-conn-read-all *conn* *aio*)
     (aio-wait *aio*)
     (format t "~%10.read  ~A" (aio-result *aio*))
-    (%dump (iov-buf iov)))    )
+    (%dump (iov-buf iov))
+      ))
 
 (defun test ()
   (t1)
   (t2)
-  (t3 32))
+  (t3 )
+  )
+
 
 
 (defun qqq ()

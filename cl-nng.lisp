@@ -3,14 +3,14 @@
 (in-package #:cl-nng)
 
 (define-condition nng-error (error)
-  ((errno :initarg errno :reader errno)))
+  ((errno :initarg :errno :reader errno)))
 ;;==============================================================================
 ;; Functions that return an errno are wrapped here, generating an error.
 ;;
 (defmacro check (form)
   `(let ((errno ,form))
      (when (plusp errno)
-       (error 'nng-error :errno errno))
+       (error (make-condition 'nng-error :errno errno)))
      errno))
 (export 'check)
 

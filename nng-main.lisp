@@ -12,13 +12,22 @@
 	 ,@body))))
 
 
-(defun iov-make(bytes &optional buf)
+(defmacro iov-buf (iov)
+  `(with-foreign-slots ((iov-buf) ,iov (:struct iov))
+     iov-buf))
+
+(defmacro iov-len (iov)
+  `(with-foreign-slots ((iov-len) ,iov (:struct iov))
+     iov-len))
+
+(defun iov-make(bytes &key buf (extra 0))
   (let ((iov (foreign-alloc '(:struct iov))))
     (with-foreign-slots ((iov-buf  iov-len) iov
 			 (:struct iov))
-      (setf iov-buf (or buf (foreign-alloc :char :count bytes))
+      (setf iov-buf (or buf (foreign-alloc :char :count (+ extra bytes)))
 	    iov-len bytes))
     iov))
+
 
 
 ;; URL
