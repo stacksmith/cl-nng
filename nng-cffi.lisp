@@ -64,46 +64,46 @@
 (alexandria:define-constant NNG-MAXADDRLEN 128)
 
 (cffi:defcstruct ctx
-	(id :pointer))
+	(id :uint32))
 
 (cffi:defcstruct dialer
-	(id :pointer))
+	(id :uint32))
 
 (cffi:defcstruct listener
-	(id :pointer))
+	(id :uint32))
 
 (cffi:defcstruct pipe
-	(id :pointer))
+	(id :uint32))
 
 (cffi:defcstruct socket
-	(id :pointer))
+	(id :uint32))
 
 (cffi:defcstruct sockaddr-inproc
-	(sa-family :pointer)
-	(sa-name :pointer :count 128))
+	(sa-family :uint16)
+	(sa-name :char :count 128))
 
 (cffi:defcstruct sockaddr-path
-	(sa-family :pointer)
-	(sa-path :pointer :count 128))
+	(sa-family :uint16)
+	(sa-path :char :count 128))
 
 (cffi:defcstruct sockaddr-in6
-	(sa-family :pointer)
-	(sa-port :pointer)
-	(sa-addr :pointer :count 16))
+	(sa-family :uint16)
+	(sa-port :uint16)
+	(sa-addr :uint8 :count 16))
 
 (cffi:defcstruct sockaddr-in
-	(sa-family :pointer)
-	(sa-port :pointer)
-	(sa-addr :pointer))
+	(sa-family :uint16)
+	(sa-port :uint16)
+	(sa-addr :uint32))
 
 (cffi:defcstruct sockaddr-zt
-	(sa-family :pointer)
-	(sa-nwid :pointer)
-	(sa-nodeid :pointer)
-	(sa-port :pointer))
+	(sa-family :uint16)
+	(sa-nwid   :uint64)
+	(sa-nodeid :uint64)
+	(sa-port   :uint32))
 
 (cffi:defcunion sockaddr
-	(s-family :pointer)
+	(s-family :uint16)
 	(s-ipc sockaddr-path)
 	(s-inproc sockaddr-inproc)
 	(s-in6 sockaddr-in6)
@@ -142,7 +142,7 @@
   (arg0 socket)
   (arg1 :string)
   (arg2 :pointer)
-  (arg3 :pointer))
+  (arg3 size-t))
 
 (cffi:defcfun ("nng_setopt_bool" %setopt-bool) :int
   (arg0 socket)
@@ -162,12 +162,12 @@
 (cffi:defcfun ("nng_setopt_size" %setopt-size) :int
   (arg0 socket)
   (arg1 :string)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_setopt_uint64" %setopt-uint64) :int
   (arg0 socket)
   (arg1 :string)
-  (arg2 :pointer))
+  (arg2 :uint64))
 
 (cffi:defcfun ("nng_setopt_string" %setopt-string) :int
   (arg0 socket)
@@ -224,7 +224,7 @@
 (cffi:defcfun ("nng_pipe_notify" %pipe-notify) :int
   (arg0 socket)
   (arg1 :int)
-  (arg2 :pointer)
+  (callback :pointer)
   (arg3 :pointer))
 
 (cffi:defcfun ("nng_getopt_string" %getopt-string) :int
@@ -278,7 +278,7 @@
   (arg0 dialer)
   (arg1 :string)
   (arg2 :pointer)
-  (arg3 :pointer))
+  (arg3 size-t))
 
 (cffi:defcfun ("nng_dialer_setopt_bool" %dialer-setopt-bool) :int
   (arg0 dialer)
@@ -298,12 +298,12 @@
 (cffi:defcfun ("nng_dialer_setopt_size" %dialer-setopt-size) :int
   (arg0 dialer)
   (arg1 :string)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_dialer_setopt_uint64" %dialer-setopt-uint64) :int
   (arg0 dialer)
   (arg1 :string)
-  (arg2 :pointer))
+  (arg2 :uint64))
 
 (cffi:defcfun ("nng_dialer_setopt_ptr" %dialer-setopt-ptr) :int
   (arg0 dialer)
@@ -319,7 +319,7 @@
   (arg0 dialer)
   (arg1 :string)
   (arg2 :pointer)
-  (arg3 :pointer))
+  (arg3 size-t))
 
 (cffi:defcfun ("nng_dialer_getopt_bool" %dialer-getopt-bool) :int
   (arg0 dialer)
@@ -339,7 +339,7 @@
 (cffi:defcfun ("nng_dialer_getopt_size" %dialer-getopt-size) :int
   (arg0 dialer)
   (arg1 :string)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_dialer_getopt_sockaddr" %dialer-getopt-sockaddr) :int
   (arg0 dialer)
@@ -365,7 +365,7 @@
   (arg0 listener)
   (arg1 :string)
   (arg2 :pointer)
-  (arg3 :pointer))
+  (arg3 size-t))
 
 (cffi:defcfun ("nng_listener_setopt_bool" %listener-setopt-bool) :int
   (arg0 listener)
@@ -385,12 +385,12 @@
 (cffi:defcfun ("nng_listener_setopt_size" %listener-setopt-size) :int
   (arg0 listener)
   (arg1 :string)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_listener_setopt_uint64" %listener-setopt-uint64) :int
   (arg0 listener)
   (arg1 :string)
-  (arg2 :pointer))
+  (arg2 :uint64))
 
 (cffi:defcfun ("nng_listener_setopt_ptr" %listener-setopt-ptr) :int
   (arg0 listener)
@@ -406,7 +406,7 @@
   (arg0 listener)
   (arg1 :string)
   (arg2 :pointer)
-  (arg3 :pointer))
+  (arg3 size-t))
 
 (cffi:defcfun ("nng_listener_getopt_bool" %listener-getopt-bool) :int
   (arg0 listener)
@@ -426,7 +426,7 @@
 (cffi:defcfun ("nng_listener_getopt_size" %listener-getopt-size) :int
   (arg0 listener)
   (arg1 :string)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_listener_getopt_sockaddr" %listener-getopt-sockaddr) :int
   (arg0 listener)
@@ -454,13 +454,13 @@
 (cffi:defcfun ("nng_send" %send) :int
   (arg0 socket)
   (arg1 :pointer)
-  (arg2 :pointer)
+  (arg2 size-t)
   (arg3 :int))
 
 (cffi:defcfun ("nng_recv" %recv) :int
   (arg0 socket)
   (arg1 :pointer)
-  (arg2 :pointer)
+  (arg2 size-t)
   (arg3 :int))
 
 (cffi:defcfun ("nng_sendmsg" %sendmsg) :int
@@ -503,7 +503,7 @@
   (arg0 ctx)
   (arg1 :string)
   (arg2 :pointer)
-  (arg3 :pointer))
+  (arg3 size-t))
 
 (cffi:defcfun ("nng_ctx_getopt_bool" %ctx-getopt-bool) :int
   (arg0 ctx)
@@ -523,13 +523,13 @@
 (cffi:defcfun ("nng_ctx_getopt_size" %ctx-getopt-size) :int
   (arg0 ctx)
   (arg1 :string)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_ctx_setopt" %ctx-setopt) :int
   (arg0 ctx)
   (arg1 :string)
   (arg2 :pointer)
-  (arg3 :pointer))
+  (arg3 size-t))
 
 (cffi:defcfun ("nng_ctx_setopt_bool" %ctx-setopt-bool) :int
   (arg0 ctx)
@@ -549,14 +549,14 @@
 (cffi:defcfun ("nng_ctx_setopt_size" %ctx-setopt-size) :int
   (arg0 ctx)
   (arg1 :string)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_alloc" %alloc) :pointer
-  (arg0 :pointer))
+  (arg0 size-t))
 
 (cffi:defcfun ("nng_free" %free) :void
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 size-t))
 
 (cffi:defcfun ("nng_strdup" %strdup) :string
   (arg0 :string))
@@ -578,7 +578,7 @@
 (cffi:defcfun ("nng_aio_result" %aio-result) :int
   (arg0 :pointer))
 
-(cffi:defcfun ("nng_aio_count" %aio-count) :pointer
+(cffi:defcfun ("nng_aio_count" %aio-count) size-t
   (arg0 :pointer))
 
 (cffi:defcfun ("nng_aio_cancel" %aio-cancel) :void
@@ -643,19 +643,19 @@
 
 (cffi:defcfun ("nng_msg_alloc" %msg-alloc) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 size-t))
 
 (cffi:defcfun ("nng_msg_free" %msg-free) :void
   (arg0 :pointer))
 
 (cffi:defcfun ("nng_msg_realloc" %msg-realloc) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 size-t))
 
 (cffi:defcfun ("nng_msg_header" %msg-header) :pointer
   (arg0 :pointer))
 
-(cffi:defcfun ("nng_msg_header_len" %msg-header-len) :pointer
+(cffi:defcfun ("nng_msg_header_len" %msg-header-len) size-t
   (arg0 :pointer))
 
 (cffi:defcfun ("nng_msg_body" %msg-body) :pointer
@@ -667,134 +667,134 @@
 (cffi:defcfun ("nng_msg_append" %msg-append) :int
   (arg0 :pointer)
   (arg1 :pointer)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_msg_insert" %msg-insert) :int
   (arg0 :pointer)
   (arg1 :pointer)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_msg_trim" %msg-trim) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 size-t))
 
 (cffi:defcfun ("nng_msg_chop" %msg-chop) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 size-t))
 
 (cffi:defcfun ("nng_msg_header_append" %msg-header-append) :int
   (arg0 :pointer)
   (arg1 :pointer)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_msg_header_insert" %msg-header-insert) :int
   (arg0 :pointer)
   (arg1 :pointer)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_msg_header_trim" %msg-header-trim) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 size-t))
 
 (cffi:defcfun ("nng_msg_header_chop" %msg-header-chop) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 size-t))
 
 (cffi:defcfun ("nng_msg_header_append_u16" %msg-header-append-u16) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint16))
 
 (cffi:defcfun ("nng_msg_header_append_u32" %msg-header-append-u32) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint32))
 
 (cffi:defcfun ("nng_msg_header_append_u64" %msg-header-append-u64) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint64))
 
 (cffi:defcfun ("nng_msg_header_insert_u16" %msg-header-insert-u16) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint16))
 
 (cffi:defcfun ("nng_msg_header_insert_u32" %msg-header-insert-u32) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint32))
 
 (cffi:defcfun ("nng_msg_header_insert_u64" %msg-header-insert-u64) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint64))
 
 (cffi:defcfun ("nng_msg_header_chop_u16" %msg-header-chop-u16) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint16))
 
 (cffi:defcfun ("nng_msg_header_chop_u32" %msg-header-chop-u32) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint32))
 
 (cffi:defcfun ("nng_msg_header_chop_u64" %msg-header-chop-u64) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint64))
 
 (cffi:defcfun ("nng_msg_header_trim_u16" %msg-header-trim-u16) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint16))
 
 (cffi:defcfun ("nng_msg_header_trim_u32" %msg-header-trim-u32) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint32))
 
 (cffi:defcfun ("nng_msg_header_trim_u64" %msg-header-trim-u64) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint64))
 
 (cffi:defcfun ("nng_msg_append_u16" %msg-append-u16) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint16))
 
 (cffi:defcfun ("nng_msg_append_u32" %msg-append-u32) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint32))
 
 (cffi:defcfun ("nng_msg_append_u64" %msg-append-u64) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint64))
 
 (cffi:defcfun ("nng_msg_insert_u16" %msg-insert-u16) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint16))
 
 (cffi:defcfun ("nng_msg_insert_u32" %msg-insert-u32) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint32))
 
 (cffi:defcfun ("nng_msg_insert_u64" %msg-insert-u64) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint64))
 
 (cffi:defcfun ("nng_msg_chop_u16" %msg-chop-u16) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint16))
 
 (cffi:defcfun ("nng_msg_chop_u32" %msg-chop-u32) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint32))
 
 (cffi:defcfun ("nng_msg_chop_u64" %msg-chop-u64) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint64))
 
 (cffi:defcfun ("nng_msg_trim_u16" %msg-trim-u16) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint16))
 
 (cffi:defcfun ("nng_msg_trim_u32" %msg-trim-u32) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint32))
 
 (cffi:defcfun ("nng_msg_trim_u64" %msg-trim-u64) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint64))
 
 (cffi:defcfun ("nng_msg_dup" %msg-dup) :int
   (arg0 :pointer)
@@ -817,13 +817,13 @@
   (arg0 :pointer)
   (arg1 :int)
   (arg2 :pointer)
-  (arg3 :pointer))
+  (arg3 size-t))
 
 (cffi:defcfun ("nng_pipe_getopt" %pipe-getopt) :int
   (arg0 pipe)
   (arg1 :string)
   (arg2 :pointer)
-  (arg3 :pointer))
+  (arg3 size-t))
 
 (cffi:defcfun ("nng_pipe_getopt_bool" %pipe-getopt-bool) :int
   (arg0 pipe)
@@ -843,7 +843,7 @@
 (cffi:defcfun ("nng_pipe_getopt_size" %pipe-getopt-size) :int
   (arg0 pipe)
   (arg1 :string)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_pipe_getopt_sockaddr" %pipe-getopt-sockaddr) :int
   (arg0 pipe)
@@ -853,7 +853,7 @@
 (cffi:defcfun ("nng_pipe_getopt_uint64" %pipe-getopt-uint64) :int
   (arg0 pipe)
   (arg1 :string)
-  (arg2 :pointer))
+  (arg2 :uint64))
 
 (cffi:defcfun ("nng_pipe_getopt_ptr" %pipe-getopt-ptr) :int
   (arg0 pipe)
@@ -1152,7 +1152,7 @@
 (cffi:defcfun ("nng_http_req_set_data" %http-req-set-data) :int
   (req :pointer)
   (body :pointer)
-  (size :pointer))
+  (size size-t))
 
 (cffi:defcfun ("nng_http_req_del_header" %http-req-del-header) :int
   (arg0 :pointer)
@@ -1176,19 +1176,19 @@
 (cffi:defcfun ("nng_http_req_copy_data" %http-req-copy-data) :int
   (arg0 :pointer)
   (arg1 :pointer)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_http_req_get_data" %http-req-get-data) :void
   (arg0 :pointer)
   (arg1 :pointer)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_http_res_alloc" %http-res-alloc) :int
   (arg0 :pointer))
 
 (cffi:defcfun ("nng_http_res_alloc_error" %http-res-alloc-error) :int
   (arg0 :pointer)
-  (arg1 :pointer))
+  (arg1 :uint16))
 
 (cffi:defcfun ("nng_http_res_free" %http-res-free) :void
   (arg0 :pointer))
@@ -1235,17 +1235,17 @@
 (cffi:defcfun ("nng_http_res_get_data" %http-res-get-data) :void
   (arg0 :pointer)
   (arg1 :pointer)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_http_res_set_data" %http-res-set-data) :int
   (arg0 :pointer)
   (arg1 :pointer)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_http_res_copy_data" %http-res-copy-data) :int
   (arg0 :pointer)
   (arg1 :pointer)
-  (arg2 :pointer))
+  (arg2 size-t))
 
 (cffi:defcfun ("nng_http_conn_close" %http-conn-close) :void
   (arg0 :pointer))
@@ -1301,6 +1301,8 @@
 (cffi:defcfun ("nng_http_res_reset" %http-res-reset) :void
   (arg0 :pointer))
 
+;;
+
 (cffi:defcfun ("nng_http_handler_alloc" %http-handler-alloc) :int
   (arg0 :pointer)
   (arg1 :string)
@@ -1318,7 +1320,7 @@
   (arg0 :pointer)
   (arg1 :string)
   (arg2 :pointer)
-  (arg3 :pointer)
+  (arg3 size-t)
   (arg4 :string))
 
 (cffi:defcfun ("nng_http_handler_alloc_directory" %http-handler-alloc-directory) :int
@@ -1376,12 +1378,12 @@
 
 (cffi:defcfun ("nng_http_server_set_error_page" %http-server-set-error-page) :int
   (arg0 :pointer)
-  (arg1 :pointer)
+  (arg1 :uint16)
   (arg2 :string))
 
 (cffi:defcfun ("nng_http_server_set_error_file" %http-server-set-error-file) :int
   (arg0 :pointer)
-  (arg1 :pointer)
+  (arg1 :uint16)
   (arg2 :string))
 
 (cffi:defcfun ("nng_http_server_res_error" %http-server-res-error) :int
