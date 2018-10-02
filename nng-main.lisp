@@ -240,21 +240,18 @@
 (def (respond0-open-raw :kind check) socket)
 
 
-
-
-(defparameter *crap* 0)
-(defparameter *out* *standard-output*)
-(defcallback mycall :void ((arg :pointer))
-  (setf *crap* 99)
-  (format *out* "~%INSIDE THREAD~%")
-  (terpri)
-  (cl:force-output *out*))
-
-
-(progn
+;;======================================================================
+;; Thread create
+;;
+;; Not particularly safe...  Maybe a special as an intermediate fun ptr?
+(let (thread-function)
+  (defcallback callback :void ((arg :pointer))
+    (funcall thread-function arg))
   (defun thread-create (func arg)
+    (setf thread-function func)
     (with-foreign-object (ptr :pointer)
-      (check (%thread-create ptr func arg))
+      (check (%thread-create ptr (callback callback) arg))
       (mem-ref ptr :pointer)))
   (export 'thead-create))
 
+(def (thread-destroy) thread)
