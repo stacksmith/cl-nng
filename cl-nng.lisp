@@ -50,4 +50,17 @@
 
 
 
+(defmacro def-getopt (cat name cffitype)
+  (let* ((lispname (concatenate 'string (symbol-name cat)
+				"-GETOPT-" (symbol-name name)))
+	 (lispsym (intern lispname))
+	 (cname (concatenate 'string "%" lispname))
+	 (csym (intern cname)))
+    `(progn
+       (defun ,lispsym (,cat opt)
+	 (with-foreign-object (data ,cffitype)
+	   (check (,csym ,cat opt data))
+	   (mem-ref data ,cffitype)))
+       (export ',lispsym))))
+
 

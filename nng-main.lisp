@@ -82,10 +82,13 @@
 
 (def (ctx-close :kind check) ctx)
 (def (ctx-getopt :kind check) ctx opt val valszp)
-(def (ctx-getopt-bool :kind check) ctx opt bvalp)
-(def (ctx-getopt-int  :kind check) ctx opt ivalp)
-(def (ctx-getopt-ms   :kind check) ctx opt durp)
-(def (ctx-getopt-size :kind check) ctx opt zp)
+(def-getopt ctx bool :int)
+(def-getopt ctx int  :int)
+(def-getopt ctx ms   :int32)
+(def-getopt ctx size  'size-t)
+;;(def-getopt ctx string :string)
+;;(def-getopt ctx uint64 :uint64)
+
 ;;(def (ctx-getopt-string :kind check) ctx opt strp)
 ;;(def (ctx-getopt-uint64 :kind check) ctx opt u65p)
 
@@ -102,35 +105,64 @@
 (def (ctx-setopt-int  :kind check) ctx opt ivalp)
 (def (ctx-setopt-ms   :kind check) ctx opt durp)
 (def (ctx-setopt-size :kind check) ctx opt zp)
+;;(def (ctx-setopt-string :kind check) ctx opt str)
+;;(def (ctx-setopt-uint64 :kind check) ctx opt u64)
 
 (def (device :kind check) s1 s2)
 (def (dial :kind check) socket url dp flags)
 (def (dialer-close) dialer)
 (def (dialer-create :kind alloc) socket url)
 (def (dialer-getopt :kind check) dialer opt val valszp)
-(def (dialer-getopt-bool :kind check) dialer opt bvalp)
-(def (dialer-getopt-int  :kind check) dialer opt ivalp)
-(def (dialer-getopt-ms   :kind check) dialer opt durp)
-(def (dialer-getopt-size :kind check) dialer opt zp)
+
+
+(def-getopt dialer bool :int)
+(def-getopt dialer int  :int)
+(def-getopt dialer ms   :int32)
+(def-getopt dialer ptr :pointer)
+(def-getopt dialer size  'size-t)
+(def-getopt dialer sockaddr 'sockaddr )
+(def-getopt dialer string :string)
+(def-getopt dialer uint64 :uint64)
+
+
 ;;*** TODO: more
 (def (dialer-id) dialer)
-(def (dialer-setopt :kind check) dialer opt val valszp)
-(def (dialer-setopt-bool :kind check) dialer opt bvalp)
-(def (dialer-setopt-int  :kind check) dialer opt ivalp)
-(def (dialer-setopt-ms   :kind check) dialer opt durp)
+(def (dialer-setopt      :kind check) dialer opt val valsz)
+(def (dialer-setopt-bool :kind check) dialer opt bval)
+(def (dialer-setopt-int  :kind check) dialer opt ival)
+(def (dialer-setopt-ms   :kind check) dialer opt dur)
+(def (dialer-setopt-ptr  :kind check) dialer opt ptr)
 (def (dialer-setopt-size :kind check) dialer opt zp)
-;; TODO: implement more
+(def (dialer-setopt-string :kind check) dialer opt str)
+(def (dialer-setopt-uint64 :kind check) dialer opt u64)
+
 (def (dialer-start :kind check) dialer flags)
 
-;; TODO: getopt
 ;;(def (inproc-register :kind check))
 ;;(def (ipc-register :kind check))
 
 (def (listener-close :kind check) listener)
 (def (listener-create :kind alloc) socket url)
+(def-getopt listener bool :int)
+(def-getopt listener int  :int)
+(def-getopt listener ms   :int32)
+(def-getopt listener ptr :pointer)
+(def-getopt listener size  'size-t)
+(def-getopt listener sockaddr 'sockaddr )
+(def-getopt listener string :string)
+(def-getopt listener uint64 :uint64)
 ;; TODO: listener-getopt
 (def (listener-id :kind check) listener)
 (def (listener-start :kind check) listener flags)
+
+(def (listener-setopt      :kind check) dialer opt val valsz)
+(def (listener-setopt-bool  :kind check) dialer opt bval)
+(def (listener-setopt-int  :kind check) dialer opt ival)
+(def (listener-setopt-ms   :kind check) dialer opt dur)
+(def (listener-setopt-ptr  :kind check) dialer opt ptr)
+(def (listener-setopt-size :kind check) dialer opt zp)
+(def (listener-setopt-string :kind check) dialer opt str)
+(def (listener-setopt-uint64 :kind check) dialer opt u64)
 
 (def (msg-alloc :kind alloc) size)
 (def (msg-append :kind check) msg val size)
@@ -165,7 +197,15 @@
 
 (def (pipe-close) pipe)
 (def (pipe-dialer) pipe)
-;; TODO: pipe opts
+(def-getopt pipe bool :int)
+(def-getopt pipe int  :int)
+(def-getopt pipe ms   :int32)
+(def-getopt pipe ptr :pointer)
+(def-getopt pipe size  'size-t)
+(def-getopt pipe sockaddr 'sockaddr )
+(def-getopt pipe string :string)
+(def-getopt pipe uint64 :uint64)
+
 (def (pipe-id) pipe)
 (def (pipe-listener) pipe)
 (def (pipe-notify :kind check) socket ev cb arg)
