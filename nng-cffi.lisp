@@ -1553,10 +1553,10 @@
 (cffi:defcfun ("nng_req0_open_raw"  %req0-open-raw) :int (socket :pointer))
 (cffi:defcfun ("nng_rep0_open"      %rep0-open) :int (socket :pointer))
 (cffi:defcfun ("nng_rep0_open_raw"  %rep0-open-raw) :int (socket :pointer))
-(cffi:defcfun ("nng_survey0_open"      %survey0-open) :int (socket :pointer))
-(cffi:defcfun ("nng_survey0_open_raw"  %survey0-open-raw) :int (socket :pointer))
-(cffi:defcfun ("nng_respond0_open"     %respond0-open) :int (socket :pointer))
-(cffi:defcfun ("nng_respond0_open_raw" %respond0-open-raw) :int (socket :pointer))
+(cffi:defcfun ("nng_surveyor0_open"      %surveyor0-open) :int (socket :pointer))
+(cffi:defcfun ("nng_surveyor0_open_raw"  %surveyor0-open-raw) :int (socket :pointer))
+(cffi:defcfun ("nng_respondent0_open"     %respondent0-open) :int (socket :pointer))
+(cffi:defcfun ("nng_respondent0_open_raw" %respondent0-open-raw) :int (socket :pointer))
 
 
 (cffi:defcfun ("nni_base64_encode" %base64-encode) :int
