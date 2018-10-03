@@ -124,8 +124,6 @@
 (def-getopt dialer string :string)
 (def-getopt dialer uint64 :uint64)
 
-
-;;*** TODO: more
 (def (dialer-id) dialer)
 (def (dialer-setopt      :kind check) dialer opt val valsz)
 (def (dialer-setopt-bool :kind check) dialer opt bval)
@@ -151,7 +149,7 @@
 (def-getopt listener sockaddr 'sockaddr )
 (def-getopt listener string :string)
 (def-getopt listener uint64 :uint64)
-;; TODO: listener-getopt
+
 (def (listener-id :kind check) listener)
 (def (listener-start :kind check) listener flags)
 
@@ -210,7 +208,7 @@
 (def (pipe-listener) pipe)
 (def (pipe-notify :kind check) socket ev cb arg)
 (def (pipe-socket) pipe)
-;; TODO: pub0 pull0 push0
+
 ;;(def (recv :kind check) socket data sizep flags)
 ;;==========================================================================
 ;; RECV
@@ -234,21 +232,22 @@ free the buffer (must allocate with nng!)"
     (check (%send socket buf size flag))))
 
 (def (recv-aio) socket aio)
-(def (recvmsg :kind check) socket pmsg flags )
 
-;;(defun recvmsg (socket) )
-;; TODO: rep0 req0 respondent0
+(defun recvmsg (socket &optional (flag 0))
+  (with-foreign-object (ptr :pointer)
+    (check (%recvmsg socket ptr flag))
+    (mem-ref ptr :pointer)))
 
 (def (send-aio) socket aio)
 
 (def (sendmsg :kind check) socket msg flags )
-;; TODO: setopt
+
 (def (sleep-aio) msec aio)
 (def (socket-id) socket)
 (def (strdup) src)
 (def (strerror) error)
 (def (strfree) str)
-;; TODO: sub0 surveyor
+
 ;;(def (tcp-register :kind check))
 ;;(def (tls-register :kind check))
 (def (url-clone :kind check) dup orig)
