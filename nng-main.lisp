@@ -40,7 +40,10 @@
 ;; C callback function, which in turn calls a Lisp function.  To accomplish
 ;; this, we create closures:
 
-(defun aio-alloc (&optional func  (arg (null-pointer)))
+(defun aio-default-func (arg)
+  (declare (ignore arg)))
+;;
+(defun aio-alloc (&optional (func #'aio-default-func)  (arg (null-pointer)))
   (defcallback cb :void ((arg :pointer))
     (funcall func arg))
   (with-foreign-object (ptr :pointer)
