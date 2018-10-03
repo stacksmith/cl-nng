@@ -23,8 +23,14 @@
 (def   (http-conn-write-res) conn res aio)
 ;;==============================================================================
 ;;  HANDLER
-(def   (http-handler-alloc :kind alloc)  path func) ;;TODO fix callback
+;;(def   (http-handler-alloc :kind alloc) path func) ;;TODO fix callback
 
+(defun http-handler-alloc (path func)
+  (defcallback cb :void ((aio :pointer))
+    (funcall func aio))
+  (with-foreign-object (ptr :pointer)
+    (check (%http-handler-alloc ptr path (callback cb)))
+    (mem-ref ptr :pointer)))
 #||(defparameter http-handler-function nil)
 (defcallback http-handler-callback :void ((aio :pointer))
   (funcall http-handler-function aio))
