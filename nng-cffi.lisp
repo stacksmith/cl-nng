@@ -51,17 +51,20 @@
            package))))))
 
 ;;;SWIG wrapper code ends here
+(defmacro defconst (name &rest rest)
+  `(progn
+     (alexandria:define-constant ,name ,@rest)
+     (export ',name)))
 
+(defconst MAJOR-VERSION 1)
 
-(alexandria:define-constant NNG-MAJOR-VERSION 1)
+(defconst MINOR-VERSION 0)
 
-(alexandria:define-constant NNG-MINOR-VERSION 0)
+(defconst PATCH-VERSION 1)
 
-(alexandria:define-constant NNG-PATCH-VERSION 1)
+(defconst RELEASE-SUFFIX "" :test 'equal)
 
-(alexandria:define-constant NNG-RELEASE-SUFFIX "" :test 'equal)
-
-(alexandria:define-constant NNG-MAXADDRLEN 128)
+(defconst MAXADDRLEN 128)
 
 (cffi:defcstruct ctx
 	(id :uint32))
@@ -122,11 +125,9 @@
 	(iov-buf :pointer)
 	(iov-len size-t))
 
-(alexandria:define-constant NNG-DURATION-INFINITE -1)
-
-(alexandria:define-constant NNG-DURATION-DEFAULT -2)
-
-(alexandria:define-constant NNG-DURATION-ZERO 0)
+(defconst DURATION-INFINITE -1)
+(defconst DURATION-DEFAULT -2)
+(defconst DURATION-ZERO 0)
 
 (cffi:defcfun ("nng_fini" %fini) :void)
 
@@ -460,7 +461,7 @@
 (cffi:defcfun ("nng_recv" %recv) :int
   (arg0 socket)
   (arg1 :pointer)
-  (arg2 size-t)
+  (arg2 (:pointer size-t))
   (arg3 :int))
 
 (cffi:defcfun ("nng_sendmsg" %sendmsg) :int
@@ -638,7 +639,7 @@
   (arg2 :pointer))
 
 (cffi:defcfun ("nng_sleep_aio" %sleep-aio) :void
-  (arg0 :pointer)
+  (arg0 :int32)
   (arg1 :pointer))
 
 (cffi:defcfun ("nng_msg_alloc" %msg-alloc) :int
@@ -884,59 +885,59 @@
 	(:NNG-FLAG-ALLOC #.1)
 	(:NNG-FLAG-NONBLOCK #.2))
 
-(alexandria:define-constant NNG-OPT-SOCKNAME "socket_name" :test 'equal)
+(defconst OPT-SOCKNAME "socket_name" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-RAW "raw" :test 'equal)
+(defconst OPT-RAW "raw" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-PROTO "protocol" :test 'equal)
+(defconst OPT-PROTO "protocol" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-PROTONAME "protocol_name" :test 'equal)
+(defconst OPT-PROTONAME "protocol_name" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-PEER "peer" :test 'equal)
+(defconst OPT-PEER "peer" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-PEERNAME "peer_name" :test 'equal)
+(defconst OPT-PEERNAME "peer_name" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-RECVBUF "recv_buffer" :test 'equal)
+(defconst OPT-RECVBUF "recv_buffer" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-SENDBUF "send_buffer" :test 'equal)
+(defconst OPT-SENDBUF "send_buffer" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-RECVFD "recv_fd" :test 'equal)
+(defconst OPT-RECVFD "recv_fd" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-SENDFD "send_fd" :test 'equal)
+(defconst OPT-SENDFD "send_fd" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-RECVTIMEO "recv_timeout" :test 'equal)
+(defconst OPT-RECVTIMEO "recv_timeout" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-SENDTIMEO "send_timeout" :test 'equal)
+(defconst OPT-SENDTIMEO "send_timeout" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-LOCADDR "local_address" :test 'equal)
+(defconst OPT-LOCADDR "local_address" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-REMADDR "remote_address" :test 'equal)
+(defconst OPT-REMADDR "remote_address" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-URL "url" :test 'equal)
+(defconst OPT-URL "url" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-MAXTTL "ttl_max" :test 'equal)
+(defconst OPT-MAXTTL "ttl_max" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-RECVMAXSZ "recv_size_max" :test 'equal)
+(defconst OPT-RECVMAXSZ "recv_size_max" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-RECONNMINT "reconnect_time_min" :test 'equal)
+(defconst OPT-RECONNMINT "reconnect_time_min" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-RECONNMAXT "reconnect_time_max" :test 'equal)
+(defconst OPT-RECONNMAXT "reconnect_time_max" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-TLS-CONFIG "tls_config" :test 'equal)
+(defconst OPT-TLS-CONFIG "tls_config" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-TLS-AUTH-MODE "tls_authmode" :test 'equal)
+(defconst OPT-TLS-AUTH-MODE "tls_authmode" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-TLS-CERT-KEY-FILE "tls_cert_key_file" :test 'equal)
+(defconst OPT-TLS-CERT-KEY-FILE "tls_cert_key_file" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-TLS-CA-FILE "tls_ca_file" :test 'equal)
+(defconst OPT-TLS-CA-FILE "tls_ca_file" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-TLS-SERVER-NAME "tls_server_name" :test 'equal)
+(defconst OPT-TLS-SERVER-NAME "tls_server_name" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-TLS-VERIFIED "tls_verified" :test 'equal)
+(defconst OPT-TLS-VERIFIED "tls_verified" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-TCP-NODELAY "tcp_nodelay" :test 'equal)
+(defconst OPT-TCP-NODELAY "tcp_nodelay" :test 'equal)
 
-(alexandria:define-constant NNG-OPT-TCP-KEEPALIVE "tcp_keepalive" :test 'equal)
+(defconst OPT-TCP-KEEPALIVE "tcp_keepalive" :test 'equal)
 
 (cffi:defcfun ("nng_stats_get" %stats-get) :int
   (arg0 :pointer))

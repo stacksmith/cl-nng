@@ -22,8 +22,18 @@
 (def   (http-conn-write-req) conn req aio)
 (def   (http-conn-write-res) conn res aio)
 ;;==============================================================================
-;;  HANDLERn
-(def   (http-handler-alloc :kind alloc)          path func) ;;TODO fix callback
+;;  HANDLER
+(def   (http-handler-alloc :kind alloc)  path func) ;;TODO fix callback
+
+#||(defparameter http-handler-function nil)
+(defcallback http-handler-callback :void ((aio :pointer))
+  (funcall http-handler-function aio))
+(defun http-handler-alloc (path fun)
+  (with-foreign-object (phandler :pointer)
+    (let ((http-handler-function fun))
+      freeb))
+  )
+||#
 (def   (http-handler-alloc-directory :kind alloc) path dirname)
 (def   (http-handler-alloc-file      :kind alloc) path filename)
 (def   (http-handler-alloc-static    :kind alloc) path data size content-type) 

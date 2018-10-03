@@ -28,22 +28,36 @@
 	    iov-len bytes))
     iov))
 
+;;===========================================================================
+;; Raw allocator.  You track the size...
+;;
+(def (alloc) size)
+(def (free) ptr size)
 
 
-;; URL
+;;===========================================================================
+;; AIO (Async IO) uses aio structures for each instance.  aios contain a
+;; C callback function, which in turn calls a Lisp function.  To accomplish
+;; this, we create closures:
+
+(defun aio-alloc (&optional func  (arg (null-pointer)))
+  (defcallback cb :void ((arg :pointer))
+    (funcall func arg))
+  (with-foreign-object (ptr :pointer)
+    (check (%aio-alloc ptr (callback cb) arg))
+    (mem-ref ptr :pointer)))
 
 
 (def (aio-abort) aio err)
 ;; Make this manually, because we want some useful defaults.
-
-(PROGN
- (DEFUN AIO-ALLOC (&OPTIONAL (CALLBACK (NULL-POINTER)) (ARG (null-pointer)))
-   (WITH-FOREIGN-OBJECT (PTR :POINTER)
-     (CHECK
-      (%AIO-ALLOC PTR CALLBACK ARG))
+#||
+(progn
+ (defun aio-alloc (&optional (func (null-pointer)) (arg (null-pointer)))
+   (with-foreign-object (ptr :pointer)
+     (check (%aio-alloc ptr callback arg))
      (MEM-REF PTR :POINTER)))
  (EXPORT 'AIO-ALLOC))
-
+||#
 ;;(def (aio-alloc :kind alloc) &optional (callback (cffi::null-pointer)) (arg 0)) ;;*
 (def (aio-cancel) aio)
 (def (aio-count) aio)
@@ -61,7 +75,7 @@
 (def (aio-stop) aio)
 (def (aio-wait) aio)
 
-(def (alloc) size)
+
 ;;(def (bus0-open :kind check) socket)
 ;;(def (bus0-open-raw :kind check) socket)
 (def (close) socket)
@@ -108,7 +122,6 @@
 ;; TODO: implement more
 (def (dialer-start :kind check) dialer flags)
 
-(def (free) ptr size)
 ;; TODO: getopt
 ;;(def (inproc-register :kind check))
 ;;(def (ipc-register :kind check))
@@ -158,12 +171,34 @@
 (def (pipe-notify :kind check) socket ev cb arg)
 (def (pipe-socket) pipe)
 ;; TODO: pub0 pull0 push0
-(def (recv :kind check) socket data sizep flags)
+;;(def (recv :kind check) socket data sizep flags)
+;;==========================================================================
+;; RECV
+;;
+;; We use zero-copy mode exclusively (since we dont' keep C buffers
+;; anyway).  We return the buffer and the length
+(defun recv (socket &key nonblock)
+  "Return values: result, buf, size."
+  (with-foreign-object (size 'size-t)
+    (with-foreign-object (buf :pointer)
+      (let ((flag (if nonblock 3 1)))
+	(let ((result (check (%recv socket buf size flag))))
+	  (values result (mem-ref buf :pointer) (mem-ref size 'size-t)))))))
+;;==========================================================================
+;; SEND
+;;
+(defun send (socket buf size &key nonblock free)
+  "Send buf of size.  If nonblock, return immediately; if free, system will
+free the buffer (must allocate with nng!)"
+  (let ((flag (+ (if free 1 0) (if nonblock 2 0))))
+    (check (%send socket buf size flag))))
+
 (def (recv-aio) socket aio)
-(def (recvmsg :kind check) socket pmsg flags
-     )
+(def (recvmsg :kind check) socket pmsg flags )
+
+;;(defun recvmsg (socket) )
 ;; TODO: rep0 req0 respondent0
-(def (send :kind check) socket data size flags)
+
 (def (send-aio) socket aio)
 
 (def (sendmsg :kind check) socket msg flags )
@@ -243,15 +278,28 @@
 ;;======================================================================
 ;; Thread create
 ;;
-;; Not particularly safe...  Maybe a special as an intermediate fun ptr?
-(let (thread-function)
-  (defcallback callback :void ((arg :pointer))
-    (funcall thread-function arg))
-  (defun thread-create (func arg)
-    (setf thread-function func)
-    (with-foreign-object (ptr :pointer)
-      (check (%thread-create ptr (callback callback) arg))
-      (mem-ref ptr :pointer)))
-  (export 'thead-create))
+;;  The callback function calls Lisp at thread entry.  A single function
+;; is used, calling via a single vecotr.  This is ok since it is used
+;; only once at entry.
+;;
+(defun thread-create (func &optional (arg (null-pointer)))
+  "Create a thread, passing it a Lisp func and optionally, a pointer
+to an argument"
+  (defcallback cb :void ((arg :pointer))
+    (funcall func arg))
+  (with-foreign-object (ptr :pointer)
+    (check (%thread-create  ptr (callback cb) arg))
+    (mem-ref ptr :pointer)))
+(export 'thead-create)
 
 (def (thread-destroy) thread)
+
+#||
+(defun thproc (arg)
+  (declare (ignore arg))
+  (loop for i from 0 to 10 do
+       (format t "~%~A..."i) (sleep 1)))
+
+(defun ttt ()
+  (thread-create #'thproc ))
+||#
