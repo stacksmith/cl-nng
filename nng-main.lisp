@@ -307,11 +307,11 @@ free the buffer (must allocate with nng!)"
 (def (rep0-open     :kind check) socket)
 (def (rep0-open-raw :kind check) socket)
 
-(def (survey0-open     :kind check) socket)
-(def (survey0-open-raw :kind check) socket)
+(def (surveyor0-open     :kind check) socket)
+(def (surveyor0-open-raw :kind check) socket)
 
-(def (respond0-open     :kind check) socket)
-(def (respond0-open-raw :kind check) socket)
+(def (respondent0-open     :kind check) socket)
+(def (respondent0-open-raw :kind check) socket)
 
 
 ;;======================================================================
