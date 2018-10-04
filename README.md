@@ -18,14 +18,11 @@ Early WIP; bare minimum for http example implemented.
 
 Swig was used initially to generate nng-cffi raw bindings.  The file was heavily edited to fix conversion problems. 
 
-NNG-CFFI - raw cffi bindings
+NNG-CFFI - raw cffi bindings; nng_xxx_yyy named as nng::%xxx-yyy
 NNG-HTTP - http extensions
-NNG-MAIN - first wrap.  Allocation functions allocate on the stack and return the value allocated.  Functions that return integer status generate a condition instead.
+NNG-MAIN - a thin wrapper, stack-allocated temporaries for allocators; xxx-yyy
+
 
 ##Quickstart:
 
-
-
-
-Specify license here
 
