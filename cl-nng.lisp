@@ -13,6 +13,15 @@
        (error (make-condition 'nng-error :errno errno)))
      errno))
 (export 'check)
+;;==============================================================================
+;; DEF
+;;
+;; A convenience defining macro.  Creates an exported definition for a lisp
+;; binding, optionally with an error check, or an "ALLOC", which (also checks)
+;; allocates an nng object using a stack temporary pointer and returns its val.
+;;
+;; If not alloc or check, creates a thunk to the %xxx binding as an inline.
+;;
 
 (defmacro def ((lname &key cname (kind nil)) &rest args)
   "Define an higher-level nng binding, wrapping cffi binding of same name.
