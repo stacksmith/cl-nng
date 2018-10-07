@@ -46,6 +46,12 @@
 		    (check (,binding ptr ,@args))
 		    (mem-ref ptr :pointer)))
 		(export ',lname)))
+      (SOCKET `(progn
+		(defun ,lname ,args
+		  (with-foreign-object (psocket :uint32)
+		    (check (,binding psocket ,@args))
+		    (mem-ref psocket :uint32)))
+		(export ',lname)))
       (CHECK `(progn
 		;;(declaim (inline ,lisp-sym))
 		(defun ,lname ,args
@@ -56,7 +62,16 @@
 	    (defun ,lname ,args
 	      (,binding ,@args))
 	    (export ',lname))))))
-
+;;==============================================================================
+;; DEF-GETOPT
+;;
+;; A common pattern is a group of getopt functions, which are similar for
+;; different kinds of objects.  CAT parameter is an nng protocol designator
+;; (e.g. pipe); NAME is the getopt object such as PTR, and CFFITYPE is the
+;; corresponding CFFI type, duh.  The above generates a binding named
+;;  (DEFUN PIPE-GETOPT-PTR (PIPE OPT) ...
+;; The expansion allocates a pointer on the stack, calls %pipe-getopt-ptr
+;; filling in the pointer, and returns it.
 
 
 (defmacro def-getopt (cat name cffitype)

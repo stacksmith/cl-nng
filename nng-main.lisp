@@ -283,38 +283,40 @@ free the buffer (must allocate with nng!)"
 ;;(def (random))
 
 ;; protocol
-(def (pair0-open     :kind check) socket)
-(def (pair0-open-raw :kind check) socket)
+(def (pair0-open     :kind socket) socket)
+(def (pair0-open-raw :kind socket) socket)
 
-(def (bus0-open     :kind check) socket)
-(def (bus0-open-raw :kind check) socket)
+(def (bus0-open     :kind socket) socket)
+(def (bus0-open-raw :kind socket) socket)
 
-(def (pair1-open     :kind check) socket)
-(def (pair1-open-raw :kind check) socket)
+(def (pair1-open     :kind socket) socket)
+(def (pair1-open-raw :kind socket) socket)
 
-(def (pull0-open     :kind check) socket)
-(def (pull0-open-raw :kind check) socket)
+(def (pull0-open     :kind socket) socket)
+(def (pull0-open-raw :kind socket) socket)
 
-(def (push0-open     :kind check) socket)
-(def (push0-open-raw :kind check) socket)
+;; TODO: these must alloc!
+;;(def (push0-open     :kind socket) socket)
+(def (push0-open     :kind socket) )
+(def (push0-open-raw :kind socket) socket)
 
-(def (pub0-open     :kind check) socket)
-(def (pub0-open-raw :kind check) socket)
+(def (pub0-open     :kind socket) socket)
+(def (pub0-open-raw :kind socket) socket)
 
-(def (sub0-open     :kind check) socket)
-(def (sub0-open-raw :kind check) socket)
+(def (sub0-open     :kind socket) socket)
+(def (sub0-open-raw :kind socket) socket)
 
-(def (req0-open     :kind check) socket)
-(def (req0-open-raw :kind check) socket)
+(def (req0-open     :kind socket) socket)
+(def (req0-open-raw :kind socket) socket)
 
-(def (rep0-open     :kind check) socket)
-(def (rep0-open-raw :kind check) socket)
+(def (rep0-open     :kind socket) socket)
+(def (rep0-open-raw :kind socket) socket)
 
-(def (surveyor0-open     :kind check) socket)
-(def (surveyor0-open-raw :kind check) socket)
+(def (surveyor0-open     :kind socket) socket)
+(def (surveyor0-open-raw :kind socket) socket)
 
-(def (respondent0-open     :kind check) socket)
-(def (respondent0-open-raw :kind check) socket)
+(def (respondent0-open     :kind socket) socket)
+(def (respondent0-open-raw :kind socket) socket)
 
 
 ;;======================================================================
