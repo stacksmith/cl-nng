@@ -112,7 +112,13 @@
 ;;(def (ctx-setopt-uint64 :kind check) ctx opt u64)
 
 (def (device :kind check) s1 s2)
-(def (dial :kind check) socket url dp flags)
+
+;;------------------------------------------------------------
+(defun dial (socket url &optional (flags 0))
+  (with-foreign-object (pdialer :uint32)
+    (check (%dial socket url pdialer flags))
+    (mem-ref pdialer :uint32)))
+ 
 (def (dialer-close) dialer)
 (def (dialer-create :kind alloc) socket url)
 (def (dialer-getopt :kind check) dialer opt val valszp)
@@ -141,6 +147,11 @@
 
 ;;(def (inproc-register :kind check))
 ;;(def (ipc-register :kind check))
+
+(defun listen (socket url &key (flags 0))
+  (with-foreign-object (plistener :uint32)
+    (check (%listen socket url plistener flags))
+    (mem-ref plistener :uint32)))
 
 (def (listener-close :kind check) listener)
 (def (listener-create :kind alloc) socket url)

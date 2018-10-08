@@ -66,20 +66,17 @@
 
 (defconst MAXADDRLEN 128)
 
-(cffi:defcstruct ctx
-	(id :uint32))
-
-(cffi:defcstruct dialer
-	(id :uint32))
-
-(cffi:defcstruct listener
-	(id :uint32))
-
-(cffi:defcstruct pipe
-	(id :uint32))
-
-(cffi:defcstruct socket
-	(id :uint32))
+#||(cffi:defcstruct ctx     (id :uint32))
+(cffi:defcstruct dialer  (id :uint32))
+(cffi:defcstruct listener(id :uint32))
+(cffi:defcstruct pipe	 (id :uint32))
+(cffi:defcstruct socket	(id :uint32))
+||#
+(defctype socket :uint32)
+(defctype ctx    :uint32)
+(defctype dialer :uint32)
+(defctype listener :uint32)
+(defctype pipe   :uint32)
 
 (cffi:defcstruct sockaddr-inproc
 	(sa-family :uint16)
@@ -234,13 +231,13 @@
   (arg2 :pointer))
 
 (cffi:defcfun ("nng_listen" %listen) :int
-  (arg0 socket)
+  (arg0 :uint32) ;***
   (arg1 :string)
   (arg2 :pointer)
   (arg3 :int))
 
 (cffi:defcfun ("nng_dial" %dial) :int
-  (arg0 socket)
+  (arg0 :uint32)
   (arg1 :string)
   (arg2 :pointer)
   (arg3 :int))
@@ -459,7 +456,7 @@
   (arg3 :int))
 
 (cffi:defcfun ("nng_recv" %recv) :int
-  (arg0 socket)
+  (arg0 :uint32);; ***socket
   (arg1 :pointer)
   (arg2 (:pointer size-t))
   (arg3 :int))
@@ -1571,3 +1568,12 @@
   (out :pointer)
   (out-len size-t))
 
+;; Protocol registration.  NOTE: no %
+(cffi:defcfun ("nng_ipc_register" ipc-register) :int)
+(cffi:defcfun ("nng_inproc_register" inproc-register) :int)
+(cffi:defcfun ("nng_tcp_register" tcp-register) :int)
+(cffi:defcfun ("nng_tls_register" tls-register) :int)
+
+(cffi:defcfun ("nng_ws_register" ws-register) :int)
+(cffi:defcfun ("nng_wss_register" wss-register) :int)
+(cffi:defcfun ("nng_zt_register" zt-register) :int)

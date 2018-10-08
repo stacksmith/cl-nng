@@ -10,6 +10,7 @@
 (defmacro check (form)
   `(let ((errno ,form))
      (when (plusp errno)
+       (format t "~%NNG-ERROR ~A ~A" errno (strerror errno))
        (error (make-condition 'nng-error :errno errno)))
      errno))
 (export 'check)

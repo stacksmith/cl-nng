@@ -3,7 +3,7 @@
 (defpackage #:cl-nng
   (:use #:cffi #:cl)
   (:nicknames #:nng)
-  (:shadow #:close)
+  (:shadow #:close #:listen)
   (:export
    #:version)) 
 
