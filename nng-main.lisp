@@ -283,40 +283,40 @@ free the buffer (must allocate with nng!)"
 ;;(def (random))
 
 ;; protocol
-(def (pair0-open     :kind socket) socket)
-(def (pair0-open-raw :kind socket) socket)
+(def (pair0-open     :kind socket))
+(def (pair0-open-raw :kind socket))
 
-(def (bus0-open     :kind socket) socket)
-(def (bus0-open-raw :kind socket) socket)
+(def (bus0-open     :kind socket))
+(def (bus0-open-raw :kind socket))
 
-(def (pair1-open     :kind socket) socket)
-(def (pair1-open-raw :kind socket) socket)
+(def (pair1-open     :kind socket))
+(def (pair1-open-raw :kind socket))
 
-(def (pull0-open     :kind socket) socket)
-(def (pull0-open-raw :kind socket) socket)
+(def (pull0-open     :kind socket) )
+(def (pull0-open-raw :kind socket))
 
 ;; TODO: these must alloc!
-;;(def (push0-open     :kind socket) socket)
+;;(def (push0-open     :kind socket))
 (def (push0-open     :kind socket) )
-(def (push0-open-raw :kind socket) socket)
+(def (push0-open-raw :kind socket))
 
-(def (pub0-open     :kind socket) socket)
-(def (pub0-open-raw :kind socket) socket)
+(def (pub0-open     :kind socket))
+(def (pub0-open-raw :kind socket))
 
-(def (sub0-open     :kind socket) socket)
-(def (sub0-open-raw :kind socket) socket)
+(def (sub0-open     :kind socket))
+(def (sub0-open-raw :kind socket))
 
-(def (req0-open     :kind socket) socket)
-(def (req0-open-raw :kind socket) socket)
+(def (req0-open     :kind socket))
+(def (req0-open-raw :kind socket))
 
-(def (rep0-open     :kind socket) socket)
-(def (rep0-open-raw :kind socket) socket)
+(def (rep0-open     :kind socket))
+(def (rep0-open-raw :kind socket))
 
-(def (surveyor0-open     :kind socket) socket)
-(def (surveyor0-open-raw :kind socket) socket)
+(def (surveyor0-open     :kind socket))
+(def (surveyor0-open-raw :kind socket))
 
-(def (respondent0-open     :kind socket) socket)
-(def (respondent0-open-raw :kind socket) socket)
+(def (respondent0-open     :kind socket))
+(def (respondent0-open-raw :kind socket))
 
 
 ;;======================================================================
