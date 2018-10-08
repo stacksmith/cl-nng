@@ -14,6 +14,20 @@ MIT license, as is the NNG library itself.
 
 Early WIP; bare minimum for http example implemented.
 
+## Lispy interface
+
+### (WITH-SOCKET ((socket-name protocol) &body body))
+
+Evaluate body in an environment containing an open socket.  Protocol is req0, rep0, etc.
+
+### (RECV-ON ((socket &optional result buffer bufsize) &body body)
+
+Evaluate body in an environment that allocates a receive buffer and cleans up on exit.  Socket must be an open socket handle; optional parameters are names, defaulting to result buffer and bufsize.
+
+### (SEND-STRING (socket string))
+
+Send a lisp string
+
 ## Implementation notes
 
 Swig was used initially to generate nng-cffi raw bindings.  The file was heavily edited to fix conversion problems. 
