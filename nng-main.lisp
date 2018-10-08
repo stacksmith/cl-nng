@@ -229,6 +229,7 @@
 ;;
 ;; We use zero-copy mode exclusively (since we dont' keep C buffers
 ;; anyway).  We return the buffer and the length
+;; TODO: deallocate on error
 (defun recv (socket &key nonblock)
   "Return values: result, buf, size."
   (with-foreign-object (size 'size-t)
@@ -236,6 +237,17 @@
       (let ((flag (if nonblock 3 1)))
 	(let ((result (check (%recv socket buf size flag))))
 	  (values result (mem-ref buf :pointer) (mem-ref size 'size-t)))))))
+;; Environment macro: receive and evaluate body in an environment containing
+;; the allocated (and later freed) buffer.
+(defmacro recv-on ((socket &optional
+			     (result-var 'result)
+			     (buffer-name-var 'buf)
+			     (buffer-size-var 'bufsize)) &body body)
+  `(multiple-value-bind (,result-var ,buffer-name-var ,buffer-size-var)
+       (recv ,socket)
+     (declare (ignorable ,result-var))
+     ,@body
+     (free ,buffer-name-var ,buffer-size-var)))
 ;;==========================================================================
 ;; SEND
 ;;
@@ -244,6 +256,15 @@
 free the buffer (must allocate with nng!)"
   (let ((flag (+ (if free 1 0) (if nonblock 2 0))))
     (check (%send socket buf size flag))))
+
+;; convenience function: send a lisp string
+(defun send-string (socket string &key nonblock)
+  "Send a lisp string"
+  (let ((flag (if nonblock 2 0))
+	(strlen (length string)))
+    (with-foreign-string (buf string)
+      (check (%send socket buf strlen flag)))))
+
 
 (def (recv-aio) socket aio)
 
@@ -358,3 +379,12 @@ to an argument"
 (defun ttt ()
   (thread-create #'thproc ))
 ||#
+
+;;======================================================================
+;; 
+(defmacro with-socket ((socket protocol) &body body)
+  (let ((socket-opener
+	 (intern (concatenate 'string (symbol-name protocol) "-OPEN"))))
+    `(let ((,socket (,socket-opener)))
+       ,@body
+       (close ,socket))))
